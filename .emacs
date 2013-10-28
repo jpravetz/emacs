@@ -3,7 +3,8 @@
 ; Filename:	.emacs
 ;
 ; Update History: (most recent first)
-;;  20-Aug-2012 stage -- Modified for adminstage.armor5.com
+;;  28-Oct-2013 jpravetz -- Added function new-shell to create new shell
+;;  28-Oct-2013 jpravetz -- Conditionally run some code only for aquaemacs, now use env USER for username
 ;;   5-Dec-2011 jpravetz -- Turned off query on exit for shells
 ;;  13-Oct-2011 jpravetz -- Added loading of less mode file
 ;;  14-Aug-2007 jpravetz -- Tweeks for aquaemacs
@@ -32,15 +33,17 @@
 ; (setq debug-on-error t)
 ; (setq debug-on-quit t)
 
-(defconst user-login-name "stage")
-(defconst user-full-name "stage")
+(defconst user-login-name (getenv "USER"))
+;(defconst user-full-name (getenv "FULLNAME")
 
 (setq load-path (append (list
 			 (expand-file-name "~/Elib"))
 			load-path))
 
-;;(one-buffer-one-frame-mode 0)
-;;(load "macosx")
+(when (boundp 'aquamacs-version)
+  (one-buffer-one-frame-mode 0)
+  (load "macosx")
+  )
 (load "variables")
 (load "functions")
 ;;(load "unique-hooks")
@@ -53,8 +56,6 @@
 (global-font-lock-mode t)
 (add-hook 'java-mode-hook 'turn-on-font-lock)
 
-;; Set shell to work for MKS kornShell
-
 (setq explicit-shell-file-name "/bin/bash")
 (defvar explicit-sh-args
   '("-i" "-L")
@@ -64,13 +65,25 @@ Value is a list of strings, which may be nil.")
 
 (garbage-collect)
 
+; Function to open a new shell with a specified name
+(defun new-shell (name)
+  (interactive "sShell name: ")
+  (let (
+        (default-directory "~/")
+        (currentbuf (get-buffer-window (current-buffer)))
+        (newbuf (generate-new-buffer-name name))
+        )
+    (generate-new-buffer newbuf)
+    (set-window-dedicated-p currentbuf nil)
+    (set-window-buffer currentbuf newbuf)
+    (shell newbuf)
+    )
+  )
+
 ;; open some shells
-(shell)
-(rename-buffer "s2")
-(shell)
-(rename-buffer "s1")
-(shell)
-(rename-buffer "s0")
+(new-shell "s2")
+(new-shell "s1")
+(new-shell "s0")
 
 ;; Don't query about the shell process on exiting emacs
 ;(set-process-query-on-exit-flag (get-process "shell") nil)
@@ -80,6 +93,6 @@ Value is a list of strings, which may be nil.")
 ;  (flet ((process-list ())) ad-do-it))
 
 ;(shell-cd "~/Documents/Notes")
-;(shell-cd "Users/jpravetz")
+;(shell-cd "~/")
 
 ;(put 'eval-expression 'disabled nil)

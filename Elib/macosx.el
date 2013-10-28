@@ -5,6 +5,7 @@
 ; Description:	Settings specific to windows 95 operation.
 ;
 ; Update History: (most recent first)
+;;  28-Oct-2013 jpravetz -- Set window size conditionally only for aquaemacs
 ;;  15-Jul-2007 jpravetz -- Created from win95.el
 ;;  08-Nov-1999 jpravetz -- Updated frame size
 ;;  27-Oct-1997 jpravetz -- Changed default dimensions to 77x108
@@ -19,8 +20,9 @@
 
 ; Set default frame size (with above font the frame size otherwise gets
 ; set too big)
-(set-frame-height (selected-frame) 52)
-(set-frame-width (selected-frame) 112)
+(when (boundp 'aquamacs-version)
+  (set-frame-height (selected-frame) 52)
+  (set-frame-width (selected-frame) 112))
 
 (defun my-new-frame-with-new-scratch ()
   (interactive)
