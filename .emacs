@@ -3,6 +3,7 @@
 ; Filename:	.emacs
 ;
 ; Update History: (most recent first)
+;;  29-Dec-2019 jpravetz -- Switched from bash to zsh as per Catalina
 ;;  28-Oct-2013 jpravetz -- Added function new-shell to create new shell
 ;;  28-Oct-2013 jpravetz -- Conditionally run some code only for aquaemacs, now use env USER for username
 ;;   5-Dec-2011 jpravetz -- Turned off query on exit for shells
@@ -56,7 +57,7 @@
 (global-font-lock-mode t)
 (add-hook 'java-mode-hook 'turn-on-font-lock)
 
-(setq explicit-shell-file-name "/bin/bash")
+(setq explicit-shell-file-name "/bin/zsh")
 (defvar explicit-sh-args
   '("-i" "-L")
   "*Args passed to inferior shell by M-x shell, if the shell is csh.
